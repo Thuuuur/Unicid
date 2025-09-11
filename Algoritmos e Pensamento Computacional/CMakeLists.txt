@@ -13,4 +13,5 @@ add_library(MinhaBiblioteca STATIC
         Ex_tabuada.c
         Ex_while.c
         Ex_funcionario.c
+        Ex_alunos.c
 )
