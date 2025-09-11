@@ -14,4 +14,13 @@ add_library(MinhaBiblioteca STATIC
         Ex_while.c
         Ex_funcionario.c
         Ex_alunos.c
+        Ex1_aula_1709.c
+        Ex2_aula_1709.c
+        Ex3_aula_1709.c
+        Ex4_aula_1709.c
+        Ex5_aula_1709.c
+        Ex6_aula_1709.c
+        Ex7_aula_1709.c
+        Ex8_aula_1709.c
+        Ex9_aula_1709.c
 )
