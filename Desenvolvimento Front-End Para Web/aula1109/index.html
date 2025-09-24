@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UniVagas</title>
+</head>
+<body>
+    <center>
+        <header>
+            <nav>
+                <h1>Cadastro de Vagas Univagas</h1>
+            </nav>
+        </header>
+        <main>
+            <form action="" method="post">
+                <label for="TituloVaga">Título da vaga: </label>
+                <br>
+                <input type="text" placeholder="Título da vaga" required>
+                <br>
+                <br>
+
+                <label for="NomeEmpresa">Nome Empresa: </label>
+                <br>
+                <input type="text" placeholder="Nome Empresa" required>
+                <br>
+                <br>
+
+                <label for="CNPJ">CNPJ da Empresa: </label>
+                <br>
+                <input type="number" placeholder="CNPJ da Empresa" required>
+                <br>
+                <br>
+
+                <label for="Modalidade">Modalidade: </label>
+                <br>
+                <select name="Modalidade" required>
+                    <option value="Presencial">Presencial</option>
+                    <option value="Hibrido">Hibrido</option>
+                    <option value="Remoto">Remoto</option>
+                </select>
+                <br>
+                <br>
+
+                <label for="Regime">Regime: </label>
+                <br>
+                <select name="Regime" required>
+                    <option value="CLT">CLT</option>
+                    <option value="PJ">PJ</option>
+                    <option value="Estagio">Estágio</option>
+                    <option value="Aprendiz">Jovem Aprendiz</option>
+                </select>
+                <br>
+                <br>
+
+                <label for="Salario">Faixa Salárial: </label>
+                <br>
+                <input type="number" min="800" placeholder="Faixa Salárial" required>
+                <br>
+                <br>
+
+                <label for="Cidade">Cidade: </label>
+                <br>
+                <input type="text" placeholder="Cidade" required>
+                <br>
+                <br>
+
+                <label for="UF">UF: </label>
+                <br>
+                <input type="text" placeholder="UF" required>
+                <br>
+                <br>
+
+                <label for="Requisitos">Requisitos para vaga: </label>
+                <br>
+                <input type="text" placeholder="Requisitos para vaga" required>
+                <br>
+                <br>
+
+                <label for="DescricaoVagas">Descrição para vaga: </label>
+                <br>
+                <input type="text" placeholder="Descrição para vaga" required>
+                <br>
+                <br>
+
+                <label for="DataExpiração">Data de expiração para vaga: </label>
+                <br>
+                <input type="datetime-local" required>
+                <br>
+                <br>
+
+                <button type="submit">Enviar</button>
+            </form>
+        </main>
+        <footer>
+
+        </footer>
+    </center>
+</body>
+</html>

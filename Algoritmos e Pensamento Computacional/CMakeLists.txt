@@ -23,4 +23,6 @@ add_library(MinhaBiblioteca STATIC
         Ex7_aula_1709.c
         Ex8_aula_1709.c
         Ex9_aula_1709.c
+        Ex1_aula_2409.c
+        Ex2_aula_2409.c
 )
