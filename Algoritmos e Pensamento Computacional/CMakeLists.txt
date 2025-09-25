@@ -25,4 +25,8 @@ add_library(MinhaBiblioteca STATIC
         Ex9_aula_1709.c
         Ex1_aula_2409.c
         Ex2_aula_2409.c
+        Ex3_aula_2409.c
+        Ex4_aula_2409.c
+        Ex5_aula_2409.c
+        Desafio_aula_2409.c
 )
