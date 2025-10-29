@@ -6,77 +6,83 @@
 // === Funções de ordenação ===
 
 // Bubble Sort
-void bubbleSort(double v[], int n)
+void bubbleSort(double *v, int n)
 {
     for (int i = 0; i < n - 1; i++)
+    {
         for (int j = 0; j < n - i - 1; j++)
-            if (v[j] > v[j + 1])
+        {
+            if (*(v + j) > *(v + j + 1))
             {
-                double temp = v[j];
-                v[j] = v[j + 1];
-                v[j + 1] = temp;
+                double temp = *(v + j);
+                *(v + j) = *(v + j + 1);
+                *(v + j + 1) = temp;
             }
+        }
+    }
 }
 
 // Insertion Sort
-void insertionSort(double v[], int n)
+void insertionSort(double *v, int n)
 {
     for (int i = 1; i < n; i++)
     {
-        double key = v[i];
+        double key = *(v + i);
         int j = i - 1;
-        while (j >= 0 && v[j] > key)
+        while (j >= 0 && *(v + j) > key)
         {
-            v[j + 1] = v[j];
+            *(v + j + 1) = *(v + j);
             j--;
         }
-        v[j + 1] = key;
+        *(v + j + 1) = key;
     }
 }
 
 // Selection Sort
-void selectionSort(double v[], int n)
+void selectionSort(double *v, int n)
 {
     for (int i = 0; i < n - 1; i++)
     {
         int min = i;
         for (int j = i + 1; j < n; j++)
-            if (v[j] < v[min])
+        {
+            if (*(v + j) < *(v + min))
                 min = j;
-        double temp = v[i];
-        v[i] = v[min];
-        v[min] = temp;
+        }
+        double temp = *(v + i);
+        *(v + i) = *(v + min);
+        *(v + min) = temp;
     }
 }
 
-// Merge Sort
-void merge(double v[], int l, int m, int r)
+// Merge Sort (com ponteiros)
+void merge(double *v, int l, int m, int r)
 {
     int n1 = m - l + 1;
     int n2 = r - m;
     double L[n1], R[n2];
 
     for (int i = 0; i < n1; i++)
-        L[i] = v[l + i];
+        L[i] = *(v + l + i);
     for (int j = 0; j < n2; j++)
-        R[j] = v[m + 1 + j];
+        R[j] = *(v + m + 1 + j);
 
     int i = 0, j = 0, k = l;
     while (i < n1 && j < n2)
     {
         if (L[i] <= R[j])
-            v[k++] = L[i++];
+            *(v + k++) = L[i++];
         else
-            v[k++] = R[j++];
+            *(v + k++) = R[j++];
     }
 
     while (i < n1)
-        v[k++] = L[i++];
+        *(v + k++) = L[i++];
     while (j < n2)
-        v[k++] = R[j++];
+        *(v + k++) = R[j++];
 }
 
-void mergeSort(double v[], int l, int r)
+void mergeSort(double *v, int l, int r)
 {
     if (l < r)
     {
@@ -87,28 +93,28 @@ void mergeSort(double v[], int l, int r)
     }
 }
 
-// Quick Sort
-void quickSort(double v[], int low, int high)
+// Quick Sort (com ponteiros)
+void quickSort(double *v, int low, int high)
 {
     if (low < high)
     {
-        double pivot = v[high];
+        double pivot = *(v + high);
         int i = (low - 1);
 
         for (int j = low; j < high; j++)
         {
-            if (v[j] <= pivot)
+            if (*(v + j) <= pivot)
             {
                 i++;
-                double temp = v[i];
-                v[i] = v[j];
-                v[j] = temp;
+                double temp = *(v + i);
+                *(v + i) = *(v + j);
+                *(v + j) = temp;
             }
         }
 
-        double temp = v[i + 1];
-        v[i + 1] = v[high];
-        v[high] = temp;
+        double temp = *(v + i + 1);
+        *(v + i + 1) = *(v + high);
+        *(v + high) = temp;
 
         int pi = i + 1;
         quickSort(v, low, pi - 1);
@@ -116,9 +122,8 @@ void quickSort(double v[], int low, int high)
     }
 }
 
-// === Funções de arquivo ===
+// === Funções de arquivo (com ponteiros) ===
 
-// Grava números no arquivo "dados.txt"
 void gravarDados(const char *arquivo)
 {
     FILE *fp = fopen(arquivo, "w");
@@ -144,8 +149,7 @@ void gravarDados(const char *arquivo)
     printf("Arquivo '%s' criado com sucesso!\n", arquivo);
 }
 
-// Lê números do arquivo
-int lerDados(const char *arquivo, double v[])
+int lerDados(const char *arquivo, double *v)
 {
     FILE *fp = fopen(arquivo, "r");
     if (fp == NULL)
@@ -155,15 +159,14 @@ int lerDados(const char *arquivo, double v[])
     }
 
     int i = 0;
-    while (fscanf(fp, "%lf", &v[i]) == 1 && i < MAX)
+    while (fscanf(fp, "%lf", (v + i)) == 1 && i < MAX)
         i++;
 
     fclose(fp);
     return i;
 }
 
-// Grava os números ordenados em novo arquivo
-void salvarOrdenado(const char *arquivo, double v[], int n)
+void salvarOrdenado(const char *arquivo, double *v, int n)
 {
     FILE *fp = fopen(arquivo, "w");
     if (fp == NULL)
@@ -173,7 +176,7 @@ void salvarOrdenado(const char *arquivo, double v[], int n)
     }
 
     for (int i = 0; i < n; i++)
-        fprintf(fp, "%.2lf\n", v[i]);
+        fprintf(fp, "%.2lf\n", *(v + i));
 
     fclose(fp);
     printf("Arquivo '%s' criado com sucesso!\n", arquivo);
@@ -249,7 +252,7 @@ int main()
 
             printf("\nArquivo atual:\n");
             for (int i = 0; i < n; i++)
-                printf("[%d] %.2lf\n", i, v[i]);
+                printf("[%d] %.2lf\n", i, *(v + i));
 
             int pos;
             double novoValor;
@@ -263,7 +266,7 @@ int main()
 
             printf("Digite o novo valor: ");
             scanf("%lf", &novoValor);
-            v[pos] = novoValor;
+            *(v + pos) = novoValor;
 
             printf("\nReordenando com Quick Sort...\n");
             quickSort(v, 0, n - 1);
