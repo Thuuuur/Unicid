@@ -12,6 +12,7 @@ typedef struct {
     char categoria[30];
     float preco;
     int quantidade;
+    char fornecedor[50];
 } Produto;
 
 void toLowerCase(char *str) {
@@ -44,7 +45,8 @@ int obterProximoID() {
     Produto p;
     
     if(f != NULL) {
-        while(fscanf(f, "%d;%49[^;];%29[^;];%f;%d\n", &p.id, p.nome, p.categoria, &p.preco, &p.quantidade) == 5) {
+        while(fscanf(f, "%d;%49[^;];%29[^;];%f;%d;%49[^\n]\n", 
+                     &p.id, p.nome, p.categoria, &p.preco, &p.quantidade, p.fornecedor) == 6) {
             if(p.id > maxID) maxID = p.id;
         }
         fclose(f);
@@ -58,7 +60,8 @@ int verificarDuplicata(const char *nome) {
     
     if(f == NULL) return 0;
     
-    while(fscanf(f, "%d;%49[^;];%29[^;];%f;%d\n", &p.id, p.nome, p.categoria, &p.preco, &p.quantidade) == 5) {
+    while(fscanf(f, "%d;%49[^;];%29[^;];%f;%d;%49[^\n]\n", 
+                 &p.id, p.nome, p.categoria, &p.preco, &p.quantidade, p.fornecedor) == 6) {
         if(compararNomeInsensitive(p.nome, nome) == 0) {
             fclose(f);
             return 1;
@@ -103,10 +106,12 @@ void inserirProduto() {
     scanf("%f", &p.preco);
     printf("Quantidade: ");
     scanf("%d", &p.quantidade);
+    printf("Fornecedor: ");
+    scanf(" %49[^\n]", p.fornecedor);
     
     f = fopen(ARQUIVO, "a");
     if(f != NULL) {
-        fprintf(f, "%d;%s;%s;%.2f;%d\n", p.id, p.nome, p.categoria, p.preco, p.quantidade);
+        fprintf(f, "%d;%s;%s;%.2f;%d;%s\n", p.id, p.nome, p.categoria, p.preco, p.quantidade, p.fornecedor);
         fclose(f);
         printf("Produto inserido com sucesso! ID: %d\n", p.id);
     } else {
@@ -120,8 +125,9 @@ int carregarProdutos(Produto lista[]) {
     
     if(f == NULL) return 0;
     
-    while(fscanf(f, "%d;%49[^;];%29[^;];%f;%d\n", &lista[count].id, lista[count].nome, 
-                 lista[count].categoria, &lista[count].preco, &lista[count].quantidade) == 5) {
+    while(fscanf(f, "%d;%49[^;];%29[^;];%f;%d;%49[^\n]\n", 
+                 &lista[count].id, lista[count].nome, lista[count].categoria, 
+                 &lista[count].preco, &lista[count].quantidade, lista[count].fornecedor) == 6) {
         count++;
         if(count >= MAX_PRODUTOS) break;
     }
@@ -130,15 +136,17 @@ int carregarProdutos(Produto lista[]) {
 }
 
 void exibirTabela(Produto lista[], int total) {
-    printf("\n+-----+--------------------------------------------------+------------------------------+----------+----------+\n");
-    printf("| %-3s | %-48s | %-28s | %-8s | %-8s |\n", "ID", "Nome", "Categoria", "Preco", "Qtd");
-    printf("+-----+--------------------------------------------------+------------------------------+----------+----------+\n");
+    printf("\n+-----+--------------------------------------------------+------------------------------+----------+----------+--------------------------------------------------+\n");
+    printf("| %-3s | %-48s | %-28s | %-8s | %-8s | %-48s |\n", 
+           "ID", "Nome", "Categoria", "Preco", "Qtd", "Fornecedor");
+    printf("+-----+--------------------------------------------------+------------------------------+----------+----------+--------------------------------------------------+\n");
     
     for(int i = 0; i < total; i++) {
-        printf("| %-3d | %-48s | %-28s | %8.2f | %8d |\n", 
-               lista[i].id, lista[i].nome, lista[i].categoria, lista[i].preco, lista[i].quantidade);
+        printf("| %-3d | %-48s | %-28s | %8.2f | %8d | %-48s |\n", 
+               lista[i].id, lista[i].nome, lista[i].categoria, 
+               lista[i].preco, lista[i].quantidade, lista[i].fornecedor);
     }
-    printf("+-----+--------------------------------------------------+------------------------------+----------+----------+\n");
+    printf("+-----+--------------------------------------------------+------------------------------+----------+----------+--------------------------------------------------+\n");
 }
 
 void listarProdutos() {
@@ -265,18 +273,20 @@ void buscarPorNome() {
     for(int i = 0; i < total; i++) {
         if(buscarNome(lista[i].nome, busca)) {
             if(encontrados == 0) {
-                printf("+-----+--------------------------------------------------+------------------------------+----------+----------+\n");
-                printf("| %-3s | %-48s | %-28s | %-8s | %-8s |\n", "ID", "Nome", "Categoria", "Preco", "Qtd");
-                printf("+-----+--------------------------------------------------+------------------------------+----------+----------+\n");
+                printf("+-----+--------------------------------------------------+------------------------------+----------+----------+--------------------------------------------------+\n");
+                printf("| %-3s | %-48s | %-28s | %-8s | %-8s | %-48s |\n", 
+                       "ID", "Nome", "Categoria", "Preco", "Qtd", "Fornecedor");
+                printf("+-----+--------------------------------------------------+------------------------------+----------+----------+--------------------------------------------------+\n");
             }
-            printf("| %-3d | %-48s | %-28s | %8.2f | %8d |\n", 
-                   lista[i].id, lista[i].nome, lista[i].categoria, lista[i].preco, lista[i].quantidade);
+            printf("| %-3d | %-48s | %-28s | %8.2f | %8d | %-48s |\n", 
+                   lista[i].id, lista[i].nome, lista[i].categoria, 
+                   lista[i].preco, lista[i].quantidade, lista[i].fornecedor);
             encontrados++;
         }
     }
     
     if(encontrados > 0) {
-        printf("+-----+--------------------------------------------------+------------------------------+----------+----------+\n");
+        printf("+-----+--------------------------------------------------+------------------------------+----------+----------+--------------------------------------------------+\n");
         printf("Total encontrado: %d\n", encontrados);
     } else {
         printf("Nenhum produto encontrado!\n");
@@ -303,18 +313,20 @@ void buscarPorCategoria() {
     for(int i = 0; i < total; i++) {
         if(buscarNome(lista[i].categoria, busca)) {
             if(encontrados == 0) {
-                printf("+-----+--------------------------------------------------+------------------------------+----------+----------+\n");
-                printf("| %-3s | %-48s | %-28s | %-8s | %-8s |\n", "ID", "Nome", "Categoria", "Preco", "Qtd");
-                printf("+-----+--------------------------------------------------+------------------------------+----------+----------+\n");
+                printf("+-----+--------------------------------------------------+------------------------------+----------+----------+--------------------------------------------------+\n");
+                printf("| %-3s | %-48s | %-28s | %-8s | %-8s | %-48s |\n", 
+                       "ID", "Nome", "Categoria", "Preco", "Qtd", "Fornecedor");
+                printf("+-----+--------------------------------------------------+------------------------------+----------+----------+--------------------------------------------------+\n");
             }
-            printf("| %-3d | %-48s | %-28s | %8.2f | %8d |\n", 
-                   lista[i].id, lista[i].nome, lista[i].categoria, lista[i].preco, lista[i].quantidade);
+            printf("| %-3d | %-48s | %-28s | %8.2f | %8d | %-48s |\n", 
+                   lista[i].id, lista[i].nome, lista[i].categoria, 
+                   lista[i].preco, lista[i].quantidade, lista[i].fornecedor);
             encontrados++;
         }
     }
     
     if(encontrados > 0) {
-        printf("+-----+--------------------------------------------------+------------------------------+----------+----------+\n");
+        printf("+-----+--------------------------------------------------+------------------------------+----------+----------+--------------------------------------------------+\n");
         printf("Total encontrado: %d\n", encontrados);
     } else {
         printf("Nenhum produto encontrado!\n");
@@ -340,7 +352,8 @@ void alterarProduto() {
         return;
     }
     
-    while(fscanf(f, "%d;%49[^;];%29[^;];%f;%d\n", &p.id, p.nome, p.categoria, &p.preco, &p.quantidade) == 5) {
+    while(fscanf(f, "%d;%49[^;];%29[^;];%f;%d;%49[^\n]\n", 
+                 &p.id, p.nome, p.categoria, &p.preco, &p.quantidade, p.fornecedor) == 6) {
         if(p.id == id) {
             encontrado = 1;
             printf("Produto encontrado: %s\n", p.nome);
@@ -362,8 +375,12 @@ void alterarProduto() {
             int novaQtd;
             scanf("%d", &novaQtd);
             if(novaQtd >= 0) p.quantidade = novaQtd;
+            
+            printf("Novo fornecedor (ou Enter para manter): ");
+            scanf(" %49[^\n]", buffer);
+            if(strlen(buffer) > 0) strcpy(p.fornecedor, buffer);
         }
-        fprintf(temp, "%d;%s;%s;%.2f;%d\n", p.id, p.nome, p.categoria, p.preco, p.quantidade);
+        fprintf(temp, "%d;%s;%s;%.2f;%d;%s\n", p.id, p.nome, p.categoria, p.preco, p.quantidade, p.fornecedor);
     }
     
     fclose(f);
@@ -398,12 +415,13 @@ void excluirProduto() {
         return;
     }
     
-    while(fscanf(f, "%d;%49[^;];%29[^;];%f;%d\n", &p.id, p.nome, p.categoria, &p.preco, &p.quantidade) == 5) {
+    while(fscanf(f, "%d;%49[^;];%29[^;];%f;%d;%49[^\n]\n", 
+                 &p.id, p.nome, p.categoria, &p.preco, &p.quantidade, p.fornecedor) == 6) {
         if(p.id == id) {
             encontrado = 1;
             printf("Produto excluido: %s\n", p.nome);
         } else {
-            fprintf(temp, "%d;%s;%s;%.2f;%d\n", p.id, p.nome, p.categoria, p.preco, p.quantidade);
+            fprintf(temp, "%d;%s;%s;%.2f;%d;%s\n", p.id, p.nome, p.categoria, p.preco, p.quantidade, p.fornecedor);
         }
     }
     
@@ -434,10 +452,11 @@ void exportarCSV() {
         return;
     }
     
-    fprintf(csv, "ID,Nome,Categoria,Preco,Quantidade\n");
+    fprintf(csv, "ID,Nome,Categoria,Preco,Quantidade,Fornecedor\n");
     
-    while(fscanf(f, "%d;%49[^;];%29[^;];%f;%d\n", &p.id, p.nome, p.categoria, &p.preco, &p.quantidade) == 5) {
-        fprintf(csv, "%d,%s,%s,%.2f,%d\n", p.id, p.nome, p.categoria, p.preco, p.quantidade);
+    while(fscanf(f, "%d;%49[^;];%29[^;];%f;%d;%49[^\n]\n", 
+                 &p.id, p.nome, p.categoria, &p.preco, &p.quantidade, p.fornecedor) == 6) {
+        fprintf(csv, "%d,%s,%s,%.2f,%d,%s\n", p.id, p.nome, p.categoria, p.preco, p.quantidade, p.fornecedor);
     }
     
     fclose(f);
