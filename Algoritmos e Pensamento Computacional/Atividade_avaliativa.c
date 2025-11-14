@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
-
+ 
 // Define o número máximo de produtos que podem ser carregados na memória
 #define MAX_PRODUTOS 100
 // Define o nome do arquivo onde os dados serão armazenados
