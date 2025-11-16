@@ -1,0 +1,2 @@
+1;fone;eletronico;15.00;20;bras
+2;casa;casa;12.00;22;casatem
